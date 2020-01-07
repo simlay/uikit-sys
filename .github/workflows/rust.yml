@@ -1,0 +1,17 @@
+name: Rust
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: macos
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install aarch64-apple-ios backend
+      run: rustup target add aarch64-apple-ios
+    - name: Build
+      run: cargo build --verbose --target aarch64-apple-ios
+    - name: Run tests
+      run: cargo test --verbose --target aarch64-apple-ios --no-run
