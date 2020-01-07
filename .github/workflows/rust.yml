@@ -7,11 +7,11 @@ jobs:
 
     runs-on: macos
     steps:
-	- name: Install minimal nightly with clippy and rustfmt
-	  uses: actions-rs/toolchain@v1
-	  with:
-		profile: minimal
-		toolchain: stable, nightly
+    - name: Install minimal nightly with clippy and rustfmt
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable, nightly
         target: aarch64-apple-ios
 
     - uses: actions/checkout@v1
