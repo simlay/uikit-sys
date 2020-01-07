@@ -4,6 +4,11 @@ version = "0.0.1"
 authors = ["Sebastian Imlay <sebastian.imlay@gmail.com>"]
 edition = "2018"
 keywords = ["ios", "uikit", "bindgen"]
+repository = "https://github.com/simlay/uikit-sys"
+documentation = "https://github.com/simlay/uikit-sys"
+categories = ["gui"]
+license = "Apache-2.0"
+
 
 [build-dependencies.bindgen]
 git = "https://github.com/rust-lang/rust-bindgen.git"
