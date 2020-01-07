@@ -1,6 +1,6 @@
 # uikit-sys - Rust bindings to to iOS UIKit Objective-C framework
 
-[![Build Status](https://github.com/simlay/uikit-sys/workflows/Rust/badge.svg)]
+[![Build Status](https://github.com/simlay/uikit-sys/workflows/Rust/badge.svg)](https://github.com/simlay/uikit-sys/actions)
 
 ## Why?
 Because there needs to exist some bindings to the iOS framework. This is the
