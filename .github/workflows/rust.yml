@@ -13,7 +13,8 @@ jobs:
         profile: default
         toolchain: stable
         target: aarch64-apple-ios
-
+    - name: install clang
+      run: brew install --with-clang llvm
     - uses: actions/checkout@v1
     - name: Build
       run: cargo build --verbose --target aarch64-apple-ios
