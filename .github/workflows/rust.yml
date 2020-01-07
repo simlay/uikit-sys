@@ -11,7 +11,7 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         profile: minimal
-        toolchain: stable, nightly
+        toolchain: stable
         target: aarch64-apple-ios
 
     - uses: actions/checkout@v1
