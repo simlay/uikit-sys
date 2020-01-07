@@ -10,7 +10,7 @@ jobs:
     - name: Install minimal nightly with clippy and rustfmt
       uses: actions-rs/toolchain@v1
       with:
-        profile: complete
+        profile: default
         toolchain: stable
         target: aarch64-apple-ios
 
