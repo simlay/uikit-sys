@@ -21,7 +21,7 @@ use uikit_sys::{
     UIColor,
 };
 
-use objc::runtime::Object as id;
+use objc::runtime::Object;
 use objc_id::{
     ShareId,
     Id,
@@ -39,13 +39,13 @@ fn run_winit() -> ! {
     let root_vc: id = unsafe {
         *(window.ui_view_controller() as *mut id)
     };
-    let root_vc: ShareId<UIViewController> = unsafe {
-        Id::from_retained_ptr(&mut *(window.ui_view_controller() as * mut UIViewController))
-    }.share();
     */
+    let root_vc: Object = unsafe {
+        &mut *(window.ui_view_controller() as * mut Object)
+    };
     //root_vc.view().set_background_color(UIColor::from_rgba(0., 1., 0., 1.).share());
 
-    //root_vc.view().set_background_color(UIColor::colorWithDisplayP3Red_green_blue_alpha_(0., 1., 0., 1.));
+    root_vc.view().set_background_color(UIColor::colorWithDisplayP3Red_green_blue_alpha_(0., 1., 0., 1.));
 
     event_loop.run(move |event: Event<()>, _, control_flow: &mut ControlFlow| {
         println!("{:?}", event);

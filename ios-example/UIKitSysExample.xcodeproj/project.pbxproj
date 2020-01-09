@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		96414CB423C6CF6100ACA8B0 /* libuikit_sys_example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96414CB323C6CF2300ACA8B0 /* libuikit_sys_example.a */; };
 		96517E7A23733540004181B9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 96517E7923733540004181B9 /* main.m */; };
 		96517E8A23733863004181B9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96517E8923733863004181B9 /* UIKit.framework */; };
 		96517E8C237338A2004181B9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96517E8B237338A2004181B9 /* Security.framework */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		96414CB323C6CF2300ACA8B0 /* libuikit_sys_example.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuikit_sys_example.a; sourceTree = "<group>"; };
 		96517E6423733540004181B9 /* UIKitSysExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIKitSysExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96517E7823733540004181B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96517E7923733540004181B9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -48,6 +50,7 @@
 			files = (
 				96517E8A23733863004181B9 /* UIKit.framework in Frameworks */,
 				96517E8C237338A2004181B9 /* Security.framework in Frameworks */,
+				96414CB423C6CF6100ACA8B0 /* libuikit_sys_example.a in Frameworks */,
 				96A4E9E52379E4CB000C7238 /* Metal.framework in Frameworks */,
 				96A4E9D923792204000C7238 /* CoreFoundation.framework in Frameworks */,
 				96A4E9DD237922FD000C7238 /* CoreGraphics.framework in Frameworks */,
@@ -92,6 +95,7 @@
 		96517E8423733846004181B9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				96414CB323C6CF2300ACA8B0 /* libuikit_sys_example.a */,
 				96A4E9E32379E497000C7238 /* MetalKit.framework */,
 				96A4E9E02379E3DC000C7238 /* CoreVideo.framework */,
 				96A4E9DE2379299C000C7238 /* Metal.framework */,
@@ -306,7 +310,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = IcedExample/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/UIKitSysExample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -333,7 +337,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = IcedExample/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/UIKitSysExample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
