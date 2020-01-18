@@ -7,16 +7,21 @@ jobs:
 
     runs-on: macos
     steps:
-    - name: Install minimal nightly with clippy and rustfmt
+    - name: Install stable rust toolchain
       uses: actions-rs/toolchain@v1
       with:
         profile: default
         toolchain: stable
-        target: aarch64-apple-ios
+        target: x86_64-apple-ios
     - name: install clang
       run: brew install llvm
     - uses: actions/checkout@v1
+    - name: Add cargo-dinghy
+      run: |
+          xcrun simctl boot $(xcrun simctl create My-iphone7 com.apple.CoreSimulator.SimDeviceType.iPhone-7 com.apple.CoreSimulator.SimRuntime.iOS-13-2)
+          cargo install cargo-dinghy
+          cargo dinghy --platform auto-ios-x86_64 test
     - name: Build
-      run: cargo build --verbose --target aarch64-apple-ios
+      run: cargo build --verbose --target x86_64-apple-ios
     - name: Run tests
-      run: cargo test --verbose --target aarch64-apple-ios --no-run
+      run: cargo test --verbose --target x86_64-apple-ios --no-run
