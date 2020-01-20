@@ -1,11 +1,23 @@
-
 extern crate bindgen;
 
-fn sdk_path() -> Result<String, std::io::Error> {
+fn sdk_path(target :&str) -> Result<String, std::io::Error> {
     use std::process::Command;
 
+    let sdk = if target.contains("apple-darwin") {
+        "macosx"
+    } else if target == "x86_64-apple-ios" || target == "i386-apple-ios" {
+        "iphonesimulator"
+    } else if target == "aarch64-apple-ios"
+        || target == "armv7-apple-ios"
+        || target == "armv7s-apple-ios"
+    {
+        "iphoneos"
+    } else {
+        unreachable!();
+    };
+
     let output = Command::new("xcrun")
-        .args(&["--sdk", "iphoneos", "--show-sdk-path"])
+        .args(&["--sdk", sdk, "--show-sdk-path"])
         .output()?
         .stdout;
     let prefix_str = std::str::from_utf8(&output).expect("invalid output from `xcrun`");
@@ -25,7 +37,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
     use std::env;
     use std::path::PathBuf;
 
-    let mut headers : Vec<&str> = vec![];
+    let mut headers: Vec<&str> = vec![];
 
     println!("cargo:rustc-link-lib=framework=UIKit");
     headers.push("UIKit/UIKit.h");
@@ -54,19 +66,10 @@ fn build(sdk_path: Option<&str>, target: &str) {
     builder = builder.clang_args(&[&format!("--target={}", target)]);
 
     if let Some(sdk_path) = sdk_path {
-        builder = builder.clang_args(
-            &[
-            "-isysroot", sdk_path,
-            ]
-            );
+        builder = builder.clang_args(&["-isysroot", sdk_path]);
     }
     if target.contains("apple-ios") {
-        builder = builder.clang_args(
-            &[
-            "-x", "objective-c",
-            "-fblocks",
-            ]
-        );
+        builder = builder.clang_args(&["-x", "objective-c", "-fblocks"]);
         builder = builder.objc_extern_crate(true);
         builder = builder.block_extern_crate(true);
         builder = builder.generate_block(true);
@@ -89,9 +92,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
     builder = builder.header_contents("UIKit.h", &meta_header.concat());
 
     // Generate the bindings.
-    builder = builder
-        .trust_clang_mangling(false)
-        .derive_default(true);
+    builder = builder.trust_clang_mangling(false).derive_default(true);
 
     let bindings = builder.generate().expect("unable to generate bindings");
 
@@ -102,12 +103,11 @@ fn build(sdk_path: Option<&str>, target: &str) {
 }
 
 fn main() {
-
     let target = std::env::var("TARGET").unwrap();
     if !target.contains("apple-ios") {
         panic!("coreaudio-sys requires macos or ios target");
     }
 
-    let directory = sdk_path().ok();
+    let directory = sdk_path(&target).ok();
     build(directory.as_ref().map(String::as_ref), &target);
 }
