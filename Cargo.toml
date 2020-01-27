@@ -11,8 +11,9 @@ license = "Apache-2.0"
 
 
 [build-dependencies.bindgen]
-git = "https://github.com/rust-lang/rust-bindgen.git"
-revision = "ba409edf5d3a1acc6ac4dcb32d1e168cc3a2a41b"
+path = "../rust-bindgen/"
+#git = "https://github.com/rust-lang/rust-bindgen.git"
+#revision = "ba409edf5d3a1acc6ac4dcb32d1e168cc3a2a41b"
 default-features = false
 
 [target.'cfg(target_os = "ios")'.dependencies]

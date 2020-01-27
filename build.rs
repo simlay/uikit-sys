@@ -53,7 +53,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
     builder = builder.objc_extern_crate(true);
     builder = builder.block_extern_crate(true);
     builder = builder.generate_block(true);
-    builder = builder.rustfmt_bindings(true);
+    //builder = builder.rustfmt_bindings(true);
     // See https://github.com/rust-lang/rust-bindgen/issues/1211
     // Technically according to the llvm mailing list, the argument to clang here should be
     // -arch arm64 but it looks cleaner to just change the target.
@@ -73,7 +73,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
         builder = builder.objc_extern_crate(true);
         builder = builder.block_extern_crate(true);
         builder = builder.generate_block(true);
-        builder = builder.rustfmt_bindings(true);
+        //builder = builder.rustfmt_bindings(true);
 
         // time.h as has a variable called timezone that conflicts with some of the objective-c
         // calls from NSCalendar.h in the Foundation framework. This removes that one variable.
@@ -88,7 +88,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
         .map(|h| format!("#include <{}>\n", h))
         .collect();
 
-    //builder = builder.header_contents("./test.h", &meta_header.concat());
+    //builder = builder.header("../rust-bindgen/test.h");
     builder = builder.header_contents("UIKit.h", &meta_header.concat());
 
     // Generate the bindings.
