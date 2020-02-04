@@ -79,7 +79,8 @@ fn build(sdk_path: Option<&str>, target: &str) {
         // calls from NSCalendar.h in the Foundation framework. This removes that one variable.
         builder = builder.blacklist_item("timezone");
         // https://github.com/rust-lang/rust-bindgen/issues/1705
-        builder = builder.blacklist_item("UIStepper");
+        builder = builder.blacklist_item("interface_UIStepper");
+        //builder = builder.whitelist_type("UIView.*");
         //builder = builder.blacklist_item("dividerImageForLeftSegmentState:rightSegmentState:");
     }
 
@@ -88,7 +89,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
         .map(|h| format!("#include <{}>\n", h))
         .collect();
 
-    //builder = builder.header("../rust-bindgen/test.h");
+    //builder = builder.header("../rust-bindgen/test.h.backup");
     builder = builder.header_contents("UIKit.h", &meta_header.concat());
 
     // Generate the bindings.
