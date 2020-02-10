@@ -4,3 +4,6 @@
 #![allow(non_upper_case_globals)]
 
 include!(concat!(env!("OUT_DIR"), "/uikit.rs"));
+pub mod util;
+#[cfg(test)]
+mod tests;

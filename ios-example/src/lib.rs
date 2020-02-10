@@ -28,6 +28,7 @@ use uikit_sys::{
     CGPoint,
     CGSize,
     id,
+    util::uicolor_test,
 };
 
 use objc::runtime::{
@@ -56,12 +57,16 @@ fn run_winit() -> ! {
     */
     let root_view: struct_UIView = struct_UIView(unsafe { *(window.ui_view() as *mut id) });
     unsafe {
-        let color = struct_UIColor::alloc();
-        let foo = color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0);
-        let color = struct_UIColor(*foo);
+        uicolor_test();
+
+        //let color = struct_UIColor::alloc();
+        //let foo = color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0);
+        //let color = struct_UIColor(*foo);
 
         //let color: id = msg_send![color, initWithRed: 0.1 green: 0.1 blue: 1.0 alpha: 0.0];
         //let _ : id = msg_send![root_view, setBackgroundColor: color];
+        //root_view.setBackgroundColor_(color.0);
+        /*
         root_view.drawRect_(
             CGRect {
                 origin: CGPoint {
@@ -74,6 +79,7 @@ fn run_winit() -> ! {
                 }
             }
         );
+        */
         //let _ : id = msg_send![root_view, setBackgroundColor: color];
     }
     //root_vc.view().set_background_color(UIColor::from_rgba(0., 1., 0., 1.).share());

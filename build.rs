@@ -89,8 +89,8 @@ fn build(sdk_path: Option<&str>, target: &str) {
         .map(|h| format!("#include <{}>\n", h))
         .collect();
 
-    builder = builder.header("../rust-bindgen/test.h.backup");
-    //builder = builder.header_contents("UIKit.h", &meta_header.concat());
+    //builder = builder.header("../rust-bindgen/test.h.backup");
+    builder = builder.header_contents("UIKit.h", &meta_header.concat());
 
     // Generate the bindings.
     builder = builder.trust_clang_mangling(false).derive_default(true);
