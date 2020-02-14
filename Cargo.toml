@@ -8,14 +8,35 @@ repository = "https://github.com/simlay/uikit-sys"
 documentation = "https://github.com/simlay/uikit-sys"
 categories = ["gui"]
 license = "Apache-2.0"
+description = "An example of a bundled application"
+
+[package.metadata.bundle.example.rect]
+name = "rect"
+identifier = "com.github.simlay.uikit-sys.rect"
+category = "Utility"
+short_description = "An example of a bundled application"
+long_description = """
+A trivial application that just displays a blank window with
+a title bar.  It serves as an example of an application that
+can be bundled with cargo-bundle, as well as a test-case for
+cargo-bundle's support for bundling crate examples.
+"""
+#icon = ["examples/hello/icon*.png"]
 
 
 [build-dependencies.bindgen]
-path = "../rust-bindgen/"
-#git = "https://github.com/rust-lang/rust-bindgen.git"
-#revision = "ba409edf5d3a1acc6ac4dcb32d1e168cc3a2a41b"
+#path = "../rust-bindgen/"
+git = "https://github.com/simlay/rust-bindgen.git"
+branch = "higher-level-objc-support-wip"
 default-features = false
 
 [target.'cfg(target_os = "ios")'.dependencies]
 objc = "0.2.7"
 block = "0.1.6"
+
+[dev-dependencies]
+winit = "0.21.0"
+log = "0.4"
+pretty_env_logger = "0.3"
+color-backtrace = "0.2.3"
+env_logger = "0.7"

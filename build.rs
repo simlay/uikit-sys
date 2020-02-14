@@ -80,8 +80,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
         builder = builder.blacklist_item("timezone");
         // https://github.com/rust-lang/rust-bindgen/issues/1705
         builder = builder.blacklist_item("interface_UIStepper");
-        //builder = builder.whitelist_type("UIView.*");
-        //builder = builder.blacklist_item("dividerImageForLeftSegmentState:rightSegmentState:");
+        builder = builder.blacklist_item("objc_object");
     }
 
     let meta_header: Vec<_> = headers
@@ -89,7 +88,6 @@ fn build(sdk_path: Option<&str>, target: &str) {
         .map(|h| format!("#include <{}>\n", h))
         .collect();
 
-    //builder = builder.header("../rust-bindgen/test.h.backup");
     builder = builder.header_contents("UIKit.h", &meta_header.concat());
 
     // Generate the bindings.
@@ -106,7 +104,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
 fn main() {
     let target = std::env::var("TARGET").unwrap();
     if !target.contains("apple-ios") {
-        panic!("coreaudio-sys requires macos or ios target");
+        panic!("uikit-sys requires macos or ios target");
     }
 
     let directory = sdk_path(&target).ok();
