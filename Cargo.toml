@@ -1,3 +1,7 @@
+[workspace]
+members = [
+    "ios-example/"
+]
 [package]
 name = "uikit-sys"
 version = "0.0.1"
@@ -25,9 +29,9 @@ cargo-bundle's support for bundling crate examples.
 
 
 [build-dependencies.bindgen]
-#path = "../rust-bindgen/"
-git = "https://github.com/simlay/rust-bindgen.git"
-branch = "higher-level-objc-support-wip"
+path = "../rust-bindgen/"
+# git = "https://github.com/simlay/rust-bindgen.git"
+# branch = "higher-level-objc-support-wip"
 default-features = false
 
 [target.'cfg(target_os = "ios")'.dependencies]

@@ -17,19 +17,19 @@ ci: simulator
 
 cargo:
 	cargo lipo
-	cp target/universal/debug/$(LIB) ./
+	cp ../target/universal/debug/$(LIB) ./
 
 simulator:
 	cargo build --target x86_64-apple-ios
-	cp target/x86_64-apple-ios/debug/$(LIB) ./
+	cp ../target/x86_64-apple-ios/debug/$(LIB) ./
 
 release:
 	cargo lipo --release
-	cp target/universal/release/$(LIB) ./
+	cp ../target/universal/release/$(LIB) ./
 
 iphone:
 	cargo build --target aarch64-apple-ios --release
-	cp target/aarch64-apple-ios/release/$(LIB) ./
+	cp ../target/aarch64-apple-ios/release/$(LIB) ./
 
 doc:
 	cargo doc --target aarch64-apple-ios --open

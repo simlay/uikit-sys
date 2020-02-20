@@ -18,14 +18,14 @@ use uikit_sys::{
     UIView_UIViewRendering,
     UIView_UIViewHierarchy,
     UIView_UIViewGeometry,
-    struct_NSTextContainer,
-    interface_NSTextContainer,
-    struct_UITextView,
-    interface_UITextView,
-    struct_UIView,
-    interface_UIView,
-    interface_UIColor,
-    struct_UIColor,
+    NSTextContainer,
+    INSTextContainer,
+    UITextView,
+    IUITextView,
+    UIView,
+    IUIView,
+    IUIColor,
+    UIColor,
     CGRect,
     CGPoint,
     CGSize,
@@ -45,10 +45,10 @@ pub fn main() -> ! {
         *(window.ui_view_controller() as *mut id)
     };
 
-    let root_view: struct_UIView = struct_UIView(window.ui_view() as id );
+    let root_view: UIView = UIView(window.ui_view() as id );
     unsafe {
-        let color = struct_UIColor::alloc();
-        let background = struct_UIColor(color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0));
+        let color = UIColor::alloc();
+        let background = UIColor(color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0));
         root_view.setBackgroundColor_(background.0);
     }
 
@@ -58,7 +58,7 @@ pub fn main() -> ! {
 
         match event {
             Event::NewEvents(StartCause::Init) => {
-                let root_view: struct_UIView = struct_UIView(window.ui_view() as id );
+                let root_view: UIView = UIView(window.ui_view() as id );
                 add_views(root_view);
             }
             Event::LoopDestroyed => return,
@@ -80,7 +80,7 @@ pub fn main() -> ! {
     })
 }
 
-fn add_views(root_view: struct_UIView) {
+fn add_views(root_view: UIView) {
     let rect = CGRect {
         origin: CGPoint {
             x: 10.0,
@@ -92,8 +92,8 @@ fn add_views(root_view: struct_UIView) {
         }
     };
     let rect =  unsafe {
-        let foo : struct_UIView = struct_UIView(struct_UIView::alloc().initWithFrame_(rect));
-        let background = struct_UIColor(struct_UIColor::yellowColor());
+        let foo : UIView = UIView(UIView::alloc().initWithFrame_(rect));
+        let background = UIColor(UIColor::yellowColor());
         foo.setBackgroundColor_(background.0);
         foo
     };
@@ -111,16 +111,16 @@ fn add_views(root_view: struct_UIView) {
         }
     };
     let input = unsafe {
-        let text_container = struct_NSTextContainer(
-            struct_NSTextContainer::alloc().initWithSize_(
+        let text_container = NSTextContainer(
+            NSTextContainer::alloc().initWithSize_(
                 CGSize {
                     height: 100.0,
                     width: 200.0,
                 }
             )
         );
-        let foo = struct_UITextView(
-            struct_UITextView::alloc().initWithFrame_textContainer_(
+        let foo = UITextView(
+            UITextView::alloc().initWithFrame_textContainer_(
                 input_rect,
                 text_container.0
             )
