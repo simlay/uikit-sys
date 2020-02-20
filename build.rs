@@ -79,7 +79,8 @@ fn build(sdk_path: Option<&str>, target: &str) {
         // calls from NSCalendar.h in the Foundation framework. This removes that one variable.
         builder = builder.blacklist_item("timezone");
         // https://github.com/rust-lang/rust-bindgen/issues/1705
-        builder = builder.blacklist_item("interface_UIStepper");
+        builder = builder.blacklist_item("IUIStepper");
+        builder = builder.blacklist_function("dividerImageForLeftSegmentState_rightSegmentState_");
         builder = builder.blacklist_item("objc_object");
     }
 
