@@ -22,6 +22,8 @@ use uikit_sys::{
     INSTextContainer,
     UITextView,
     IUITextView,
+    UISwitch,
+    IUISwitch,
     UIView,
     IUIView,
     IUIColor,
@@ -38,6 +40,7 @@ pub fn main() -> ! {
     let event_loop = EventLoop::new();
     let window : Window = WindowBuilder::new()
         .with_title("UIKit Rust App")
+        .with_maximized(true)
         .build(&event_loop)
         .expect("Failed to build window");
 
@@ -106,15 +109,15 @@ fn add_views(root_view: UIView) {
             y: 50.0
         },
         size: CGSize {
-            height: 200.0,
             width: 200.0,
+            height: 20.0,
         }
     };
     let input = unsafe {
         let text_container = NSTextContainer(
             NSTextContainer::alloc().initWithSize_(
                 CGSize {
-                    height: 100.0,
+                    height: 10.0,
                     width: 200.0,
                 }
             )
@@ -129,6 +132,21 @@ fn add_views(root_view: UIView) {
     };
     unsafe {
         root_view.addSubview_(input.0);
+    }
+    unsafe {
+        let switch = UISwitch(UISwitch::alloc().initWithFrame_(
+            CGRect {
+                origin: CGPoint {
+                    x: 10.0,
+                    y: 80.0
+                },
+                size: CGSize {
+                    height: 200.0,
+                    width: 200.0,
+                }
+            }
+        ));
+        root_view.addSubview_(switch.0);
     }
 }
 fn debug_init() {
