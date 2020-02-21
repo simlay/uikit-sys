@@ -1,11 +1,11 @@
 #[test]
 fn uicolor()  {
     use crate::{
-        struct_UIColor,
-        interface_UIColor,
+        UIColor,
+        IUIColor,
     };
     unsafe {
-        let white = struct_UIColor(struct_UIColor::whiteColor());
+        let white = UIColor(UIColor::whiteColor());
         white.setFill();
     }
 }
