@@ -13,17 +13,18 @@ use winit::{
 };
 
 use uikit_sys::{
+    self,
     //UIView,
     //UIViewController,
     UIView_UIViewRendering,
     UIView_UIViewHierarchy,
     UIView_UIViewGeometry,
-    NSTextContainer,
-    INSTextContainer,
     UITextView,
     IUITextView,
+    IUIControl,
     UISwitch,
     IUISwitch,
+    NSBlockOperation,
     UIView,
     IUIView,
     IUIColor,
@@ -49,11 +50,9 @@ pub fn main() -> ! {
     };
 
     let root_view: UIView = UIView(window.ui_view() as id );
-    unsafe {
-        let color = UIColor::alloc();
-        let background = UIColor(color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0));
-        root_view.setBackgroundColor_(background.0);
-    }
+    let color = UIColor::alloc();
+    let background = UIColor(color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0));
+    root_view.setBackgroundColor_(background.0);
 
     event_loop.run(move |event: Event<()>, _, control_flow: &mut ControlFlow| {
         println!("{:?}", event);
@@ -84,6 +83,12 @@ pub fn main() -> ! {
 }
 
 fn add_views(root_view: UIView) {
+    add_rect(root_view);
+    add_input(root_view);
+    add_switch(root_view);
+}
+
+fn add_rect(root_view: UIView) {
     let rect = CGRect {
         origin: CGPoint {
             x: 10.0,
@@ -94,15 +99,20 @@ fn add_views(root_view: UIView) {
             width: 20.0,
         }
     };
-    let rect =  unsafe {
+    let rect =  {
         let foo : UIView = UIView(UIView::alloc().initWithFrame_(rect));
         let background = UIColor(UIColor::yellowColor());
         foo.setBackgroundColor_(background.0);
         foo
     };
-    unsafe {
-        root_view.addSubview_(rect.0);
-    }
+    root_view.addSubview_(rect.0);
+}
+
+fn add_input(root_view: UIView) {
+    use uikit_sys::{
+        NSTextContainer,
+        INSTextContainer,
+    };
     let input_rect = CGRect {
         origin: CGPoint {
             x: 10.0,
@@ -113,7 +123,7 @@ fn add_views(root_view: UIView) {
             height: 20.0,
         }
     };
-    let input = unsafe {
+    let input = {
         let text_container = NSTextContainer(
             NSTextContainer::alloc().initWithSize_(
                 CGSize {
@@ -130,25 +140,31 @@ fn add_views(root_view: UIView) {
         );
         foo
     };
-    unsafe {
-        root_view.addSubview_(input.0);
-    }
-    unsafe {
-        let switch = UISwitch(UISwitch::alloc().initWithFrame_(
-            CGRect {
-                origin: CGPoint {
-                    x: 10.0,
-                    y: 80.0
-                },
-                size: CGSize {
-                    height: 200.0,
-                    width: 200.0,
-                }
-            }
-        ));
-        root_view.addSubview_(switch.0);
-    }
+    root_view.addSubview_(input.0);
 }
+use block::ConcreteBlock;
+
+fn add_switch(root_view: UIView) {
+    use uikit_sys::INSBlockOperation;
+    //let toggle_handler = NSBlockOperation::blockOperationWithBlock_(*ConcreteBlock::new(|_| {
+    //    println!("THE TOGGLE BUTTON WAS TOGGLED!");
+    //}));
+    let switch = UISwitch(IUISwitch::initWithFrame_(UISwitch::alloc(),
+    CGRect {
+        origin: CGPoint {
+            x: 10.0,
+            y: 80.0
+        },
+        size: CGSize {
+            height: 200.0,
+            width: 200.0,
+        }
+    }
+    ));
+    root_view.addSubview_(switch.0);
+}
+
+
 fn debug_init() {
     color_backtrace::install_with_settings(
         color_backtrace::Settings::new().verbosity(color_backtrace::Verbosity::Full),
