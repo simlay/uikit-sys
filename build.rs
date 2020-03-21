@@ -82,6 +82,9 @@ fn build(sdk_path: Option<&str>, target: &str) {
         builder = builder.blacklist_item("IUIStepper");
         builder = builder.blacklist_function("dividerImageForLeftSegmentState_rightSegmentState_");
         builder = builder.blacklist_item("objc_object");
+        //builder = builder.blacklist_item("NS.*");
+        //builder = builder.whitelist_type("IUI.*");
+        //builder = builder.whitelist_type("UI.*");
     }
 
     let meta_header: Vec<_> = headers
