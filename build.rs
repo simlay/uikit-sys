@@ -49,11 +49,12 @@ fn build(sdk_path: Option<&str>, target: &str) {
     // Begin building the bindgen params.
     let mut builder = bindgen::Builder::default();
 
-    builder = builder.clang_args(&["-x", "objective-c", "-fblocks"]);
-    builder = builder.objc_extern_crate(true);
-    builder = builder.block_extern_crate(true);
-    builder = builder.generate_block(true);
-    builder = builder.rustfmt_bindings(true);
+    builder = builder.clang_args(&["-x", "objective-c", "-fblocks"])
+        .objc_extern_crate(true)
+        .block_extern_crate(true)
+        .generate_block(true)
+        //.rustfmt_bindings(true)
+        .generate_comments(true);
     // See https://github.com/rust-lang/rust-bindgen/issues/1211
     // Technically according to the llvm mailing list, the argument to clang here should be
     // -arch arm64 but it looks cleaner to just change the target.
