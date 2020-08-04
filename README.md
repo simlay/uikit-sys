@@ -12,5 +12,7 @@ rust-bindgen.
 Admittedly, it would be nice if the docs had links to the original apple docs
 but that's actually kind of hard to do.
 
+Here are the docs: [simlay.github.io/uikit-sys](https://simlay.github.io/uikit-sys)
+
 ## Are there examples?
 Maybe when I get the time.
