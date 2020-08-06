@@ -29,10 +29,11 @@ cargo-bundle's support for bundling crate examples.
 
 
 [build-dependencies.bindgen]
-#path = "../rust-bindgen/"
-git = "https://github.com/simlay/rust-bindgen.git"
-branch = "higher-level-objc-support"
+version = "0.54.1"
 default-features = false
+#path = "../rust-bindgen/"
+#git = "https://github.com/simlay/rust-bindgen.git"
+#branch = "higher-level-objc-support"
 
 [target.'cfg(target_os = "ios")'.dependencies]
 objc = "0.2.7"
