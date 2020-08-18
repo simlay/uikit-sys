@@ -31,7 +31,7 @@ cargo-bundle's support for bundling crate examples.
 [build-dependencies.bindgen]
 default-features = false
 git = "https://github.com/simlay/rust-bindgen.git"
-branch = "categories-and-better-return-types"
+branch = "objc-category-inheritance"
 #version = "0.54.1"
 #path = "../rust-bindgen/"
 

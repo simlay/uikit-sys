@@ -1,11 +1,10 @@
-extern crate bindgen;
+use std::env;
+use std::path::PathBuf;
 
-fn sdk_path(target :&str) -> Result<String, std::io::Error> {
+fn sdk_path(target: &str) -> Result<String, std::io::Error> {
     use std::process::Command;
 
-    let sdk = if target.contains("apple-darwin") {
-        "macosx"
-    } else if target == "x86_64-apple-ios" || target == "i386-apple-ios" {
+    let sdk = if target == "x86_64-apple-ios" || target == "i386-apple-ios" {
         "iphonesimulator"
     } else if target == "aarch64-apple-ios"
         || target == "armv7-apple-ios"
@@ -33,27 +32,9 @@ fn build(sdk_path: Option<&str>, target: &str) {
     //
     // Only link to each framework and include their headers if their features are enabled and they
     // are available on the target os.
-
-    use std::env;
-    use std::path::PathBuf;
-
-    let mut headers: Vec<&str> = vec![];
-
-    println!("cargo:rustc-link-lib=framework=UIKit");
-    headers.push("UIKit/UIKit.h");
-
     println!("cargo:rerun-if-env-changed=BINDGEN_EXTRA_CLANG_ARGS");
-    // Get the cargo out directory.
-    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("env variable OUT_DIR not found"));
+    println!("cargo:rustc-link-lib=framework=UIKit");
 
-    // Begin building the bindgen params.
-    let mut builder = bindgen::Builder::default();
-
-    builder = builder.clang_args(&["-x", "objective-c", "-fblocks"]);
-    builder = builder.objc_extern_crate(true);
-    builder = builder.block_extern_crate(true);
-    builder = builder.generate_block(true);
-    builder = builder.rustfmt_bindings(true);
     // See https://github.com/rust-lang/rust-bindgen/issues/1211
     // Technically according to the llvm mailing list, the argument to clang here should be
     // -arch arm64 but it looks cleaner to just change the target.
@@ -62,39 +43,35 @@ fn build(sdk_path: Option<&str>, target: &str) {
     } else {
         target
     };
+    // Begin building the bindgen params.
+    let mut builder = bindgen::Builder::default();
 
-    builder = builder.clang_args(&[&format!("--target={}", target)]);
-
+    let target_arg = format!("--target={}", target);
+    let mut clang_args = vec!["-x", "objective-c", "-fblocks", &target_arg];
     if let Some(sdk_path) = sdk_path {
-        builder = builder.clang_args(&["-isysroot", sdk_path]);
+        clang_args.extend(&["-isysroot", sdk_path]);
     }
-    if target.contains("apple-ios") {
-        builder = builder.clang_args(&["-x", "objective-c", "-fblocks"]);
-        builder = builder.objc_extern_crate(true);
-        builder = builder.block_extern_crate(true);
-        builder = builder.generate_block(true);
-        //builder = builder.rustfmt_bindings(true);
 
+    builder = builder
+        .clang_args(&clang_args)
+        .objc_extern_crate(true)
+        .block_extern_crate(true)
+        .generate_block(true)
+        .rustfmt_bindings(true)
         // time.h as has a variable called timezone that conflicts with some of the objective-c
         // calls from NSCalendar.h in the Foundation framework. This removes that one variable.
-        builder = builder.blacklist_item("timezone");
+        .blacklist_item("timezone")
         // https://github.com/rust-lang/rust-bindgen/issues/1705
-        builder = builder.blacklist_item("IUIStepper");
-        builder = builder.blacklist_function("dividerImageForLeftSegmentState_rightSegmentState_");
-        builder = builder.blacklist_item("objc_object");
-    }
-
-    let meta_header: Vec<_> = headers
-        .iter()
-        .map(|h| format!("#include <{}>\n", h))
-        .collect();
-
-    builder = builder.header_contents("UIKit.h", &meta_header.concat());
+        .blacklist_item("IUIStepper")
+        .blacklist_function("dividerImageForLeftSegmentState_rightSegmentState_")
+        .blacklist_item("objc_object")
+        .header_contents("UIKit.h", "#include<UIKit/UIKit.h>");
 
     // Generate the bindings.
-    builder = builder.trust_clang_mangling(false).derive_default(true);
-
     let bindings = builder.generate().expect("unable to generate bindings");
+
+    // Get the cargo out directory.
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("env variable OUT_DIR not found"));
 
     // Write them to the crate root.
     bindings
@@ -105,7 +82,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
 fn main() {
     let target = std::env::var("TARGET").unwrap();
     if !target.contains("apple-ios") {
-        panic!("uikit-sys requires macos or ios target");
+        panic!("uikit-sys requires the ios target");
     }
 
     let directory = sdk_path(&target).ok();
