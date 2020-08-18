@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: macos
+    runs-on: macOS-latest
     steps:
     - name: Install stable rust toolchain
       uses: actions-rs/toolchain@v1
