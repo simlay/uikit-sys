@@ -51,8 +51,8 @@ pub fn main() -> ! {
     let root_view: UIView = UIView(window.ui_view() as id );
     unsafe {
         let color = UIColor::alloc();
-        let background = UIColor(color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0));
-        root_view.setBackgroundColor_(background.0);
+        let background = color.initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0);
+        root_view.setBackgroundColor_(background);
     }
 
     event_loop.run(move |event: Event<()>, _, control_flow: &mut ControlFlow| {
@@ -96,12 +96,12 @@ fn add_views(root_view: UIView) {
     };
     let rect =  unsafe {
         let foo : UIView = UIView(UIView::alloc().initWithFrame_(rect));
-        let background = UIColor(UIColor::yellowColor());
-        foo.setBackgroundColor_(background.0);
+        let background = UIColor::yellowColor();
+        foo.setBackgroundColor_(background);
         foo
     };
     unsafe {
-        root_view.addSubview_(rect.0);
+        root_view.addSubview_(rect);
     }
     let input_rect = CGRect {
         origin: CGPoint {
@@ -125,16 +125,16 @@ fn add_views(root_view: UIView) {
         let foo = UITextView(
             UITextView::alloc().initWithFrame_textContainer_(
                 input_rect,
-                text_container.0
+                text_container
             )
         );
         foo
     };
     unsafe {
-        root_view.addSubview_(input.0);
+        root_view.addSubview_(UIView(input.0));
     }
     unsafe {
-        let switch = UISwitch(UISwitch::alloc().initWithFrame_(
+        let switch = UISwitch(uikit_sys::IUISwitch::initWithFrame_(UISwitch::alloc(),
             CGRect {
                 origin: CGPoint {
                     x: 10.0,
@@ -146,7 +146,7 @@ fn add_views(root_view: UIView) {
                 }
             }
         ));
-        root_view.addSubview_(switch.0);
+        root_view.addSubview_(UIView(switch.0));
     }
 }
 fn debug_init() {
