@@ -1,0 +1,52 @@
+name: uikit_example
+options:
+  bundleIdPrefix: com.rust
+configs:
+  Debug: debug
+  Release: release
+targets:
+  cargo_ios:
+    type: ""
+    platform: iOS
+    legacy:
+      toolPath: /bin/sh
+      arguments: "build_rust_deps.sh"
+      workingDirectory: "."
+  use_uikit_example:
+    sources: ios-src/
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    scheme:
+      environmentVariables:
+        - variable: RUST_BACKTRACE
+          value: 1
+          isEnabled: true
+        - variable: RUST_LOG
+          value: info
+          isEnabled: true
+        - variable: METAL_DEVICE_WRAPPER_TYPE
+          value: 1
+          isEnabled: true
+    settings:
+      base:
+        OTHER_LDFLAGS: ["$(inherited)", "-luikit_sys_example"]
+        ENABLE_BITCODE: NO
+        CLANG_CXX_LANGUAGE_STANDARD: c++14
+        CLANG_CXX_LIBRARY: libc++
+      configs:
+        debug:
+          HEADER_SEARCH_PATHS: ["$(inherited)", "ios-src/"]
+          LIBRARY_SEARCH_PATHS: ["$(inherited)", "../target/universal/debug"]
+        release:
+          HEADER_SEARCH_PATHS: ["$(inherited)", "ios-src/"]
+          LIBRARY_SEARCH_PATHS: ["$(inherited)", "../target/universal/release"]
+    dependencies:
+      - sdk: Security.framework
+      - sdk: UIKit.framework
+      - target: cargo_ios
+        embed: false
+    info:
+      path: ios-src/Info.plist
+      properties:
+        UILaunchStoryboardName: LaunchScreen

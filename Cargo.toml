@@ -33,14 +33,15 @@ default-features = false
 git = "https://github.com/simlay/rust-bindgen.git"
 branch = "objc-category-inheritance"
 #version = "0.54.1"
-#path = "../rust-bindgen/"
+#path = "../../rust-bindgen/"
 
 [target.'cfg(target_os = "ios")'.dependencies]
 objc = "0.2.7"
 block = "0.1.6"
 
 [dev-dependencies]
-winit = "0.21.0"
+#winit = "0.22.0"
+winit = { git = "https://github.com/rust-windowing/winit" }
 log = "0.4"
 pretty_env_logger = "0.3"
 color-backtrace = "0.2.3"
