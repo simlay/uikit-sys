@@ -115,15 +115,14 @@ fn add_views(root_view: &UIView) {
             width: 20.0,
         },
     };
-    let rect = unsafe {
-        let rect_ptr = UIView::alloc().initWithFrame_(rect);
-        let foo: UIView = UIView::from_id(rect_ptr, true);
+    let rect =  unsafe {
+        let foo : UIView = UIView(UIView::alloc().initWithFrame_(rect));
         let background = UIColor::yellowColor();
         foo.setBackgroundColor_(background);
         foo
     };
     unsafe {
-        root_view.addSubview_(UIView::from_id(rect.id(), false));
+        root_view.addSubview_(rect);
     }
     let input_rect = CGRect {
         origin: CGPoint { x: 10.0, y: 50.0 },
@@ -133,31 +132,36 @@ fn add_views(root_view: &UIView) {
         },
     };
     let input = unsafe {
-        let text_container =
-            NSTextContainer::from_id(NSTextContainer::alloc().initWithSize_(CGSize {
-                height: 10.0,
-                width: 200.0,
-            }), true);
-        let foo = UITextView::from_id(
-            UITextView::alloc().initWithFrame_textContainer_(input_rect, text_container), true
+        let text_container = NSTextContainer(
+            NSTextContainer::alloc().initWithSize_(
+                CGSize {
+                    height: 10.0,
+                    width: 200.0,
+                }
+            )
+        );
+        let foo = UITextView(
+            UITextView::alloc().initWithFrame_textContainer_(
+                input_rect,
+                text_container
+            )
         );
         foo
     };
     unsafe {
-        root_view.addSubview_(input.into());
+        root_view.addSubview_(UIView(input.0));
     }
     unsafe {
-        let switch = UISwitch::from_id(uikit_sys::IUISwitch::initWithFrame_(
-            &UISwitch::alloc(),
+        let switch = UISwitch(uikit_sys::IUISwitch::initWithFrame_(UISwitch::alloc(),
             CGRect {
                 origin: CGPoint { x: 10.0, y: 80.0 },
                 size: CGSize {
                     height: 200.0,
                     width: 200.0,
-                },
-            },
-        ), true);
-        root_view.addSubview_(switch.into());
+                }
+            }
+        ));
+        root_view.addSubview_(UIView(switch.0));
     }
 }
 

@@ -5,7 +5,7 @@ fn uicolor()  {
         IUIColor,
     };
     unsafe {
-        let white = UIColor(UIColor::whiteColor());
+        let white = UIColor::whiteColor();
         white.setFill();
     }
 }
