@@ -41,7 +41,7 @@ pub fn main() -> ! {
 
     let root_vc: id = unsafe { *(window.ui_view_controller() as *mut id) };
 
-    let root_view: UIView = UIView::from_id(window.ui_view() as id, true);
+    let root_view: UIView = UIView(window.ui_view() as id);
     unsafe {
 
         //let background = UIColor::alloc().initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0);
@@ -68,7 +68,7 @@ pub fn main() -> ! {
 
         match event {
             Event::NewEvents(StartCause::Init) => {
-                let root_view: UIView = UIView::from_id(window.ui_view() as id, true);
+                let root_view: UIView = UIView(window.ui_view() as id);
                 //add_views(&root_view);
                 unsafe {
                     root_view.addSubview_(label.clone());
@@ -103,7 +103,6 @@ pub fn main() -> ! {
             _ => {
             },
         }
-                            println!("LABEL REF COUNTE: {:?}", label.get_retain_count());
     })
 }
 
@@ -194,7 +193,7 @@ fn add_counte_label(count: i64) -> UIView {
     let label = unsafe {
         //let alloc = UILabel::alloc();
         //printlnalloc.print_retain_count();
-        let label = UILabel::from_id(UILabel::alloc().init(), true);
+        let label = UILabel(UILabel::alloc().init());
 
         label.setFrame_(CGRect {
             origin: CGPoint {
@@ -207,24 +206,20 @@ fn add_counte_label(count: i64) -> UIView {
             },
         });
 
-        /*
         let text_alloc = NSString::alloc();
-        let text = NSString::from_id(
+        let text = NSString(
             text_alloc.initWithBytes_length_encoding_(
                 text_ptr as *mut std::ffi::c_void,
                 text_length,
                 NSUTF8StringEncoding,
-            ),
-            true
+            )
         );
         label.setText_(text);
-        */
         label
 
     };
     //label
-    //UIView::from_id(label.id())
-    label.into()
+    UIView(label.0)
 }
 fn debug_init() {
     color_backtrace::install_with_settings(
