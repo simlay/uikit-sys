@@ -151,7 +151,7 @@ fn add_views(root_view: &UIView) {
         root_view.addSubview_(UIView(input.0));
     }
     unsafe {
-        let switch = UISwitch(uikit_sys::IUISwitch::initWithFrame_(UISwitch::alloc(),
+        let switch = UISwitch(uikit_sys::IUISwitch::initWithFrame_(&UISwitch::alloc(),
             CGRect {
                 origin: CGPoint { x: 10.0, y: 80.0 },
                 size: CGSize {
@@ -218,9 +218,9 @@ fn add_counte_label(count: i64) -> UIView {
         label
 
     };
-    //label
     UIView(label.0)
 }
+
 fn debug_init() {
     color_backtrace::install_with_settings(
         color_backtrace::Settings::new().verbosity(color_backtrace::Verbosity::Full),
