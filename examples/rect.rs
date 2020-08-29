@@ -30,6 +30,7 @@ use objc::msg_send;
 use uikit_sys::CFGetRetainCount;
 
 pub fn main() -> ! {
+    test_casting();
     debug_init();
     log::debug!("STARTING THE APP!");
     let event_loop = EventLoop::new();
@@ -219,6 +220,22 @@ fn add_counte_label(count: i64) -> UIView {
 
     };
     UIView(label.0)
+}
+fn test_casting() {
+    use uikit_sys::{
+        UIButton,
+        INSObject,
+        UIView,
+        UILabel,
+    };
+    use std::convert::TryFrom;
+    let button = UIButton(unsafe {UIButton::alloc().init()});
+    let as_view : UIView = button.into();
+    let as_button = UIButton::try_from(as_view.clone());
+    assert!(as_button.is_ok());
+    let as_uilabel = UILabel::try_from(as_view);
+    assert!(as_uilabel.is_err());
+    println!("AS UILABEL: {:?}", as_uilabel.err());
 }
 
 fn debug_init() {
