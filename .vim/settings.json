@@ -1,0 +1,7 @@
+{
+    "rust-analyzer": {
+        "cargo": {
+            "target": "aarch64-apple-ios"
+        }
+    }
+}

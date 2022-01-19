@@ -3,8 +3,13 @@ use std::path::PathBuf;
 
 fn sdk_path(target: &str) -> Result<String, std::io::Error> {
     use std::process::Command;
-
-    let sdk = if target == "x86_64-apple-ios" || target == "i386-apple-ios" {
+    let sdk = if vec![
+        "x86_64-apple-ios",
+        "i386-apple-ios",
+        "aarch64-apple-ios-sim",
+    ]
+    .contains(&target)
+    {
         "iphonesimulator"
     } else if target == "aarch64-apple-ios"
         || target == "armv7-apple-ios"

@@ -6,7 +6,7 @@ members = [
 name = "uikit-sys"
 version = "0.0.1"
 authors = ["Sebastian Imlay <sebastian.imlay@gmail.com>"]
-edition = "2018"
+edition = "2021"
 keywords = ["ios", "uikit", "bindgen"]
 repository = "https://github.com/simlay/uikit-sys"
 documentation = "https://simlay.github.io/uikit-sys"
@@ -28,21 +28,20 @@ cargo-bundle's support for bundling crate examples.
 #icon = ["examples/hello/icon*.png"]
 
 
-[build-dependencies.bindgen]
-default-features = false
-git = "https://github.com/simlay/rust-bindgen.git"
-branch = "objc-category-inheritance"
-#version = "0.54.1"
-#path = "../../rust-bindgen/"
+[build-dependencies]
+bindgen = { version = "0.59.2", default-features = false }
 
 [target.'cfg(target_os = "ios")'.dependencies]
 objc = "0.2.7"
 block = "0.1.6"
 
 [dev-dependencies]
-#winit = "0.22.0"
-winit = { git = "https://github.com/rust-windowing/winit" }
+winit = "0.26.0"
 log = "0.4"
-pretty_env_logger = "0.3"
-color-backtrace = "0.2.3"
-env_logger = "0.7"
+pretty_env_logger = "0.4"
+color-backtrace = "0.5.1"
+env_logger = "0.9"
+
+[patch.crates-io]
+winit = { git = "https://github.com/rust-windowing/winit" }
+bindgen = { git = "https://github.com/simlay/rust-bindgen.git", branch = "objc-category-inheritance" }
