@@ -22,9 +22,9 @@ jobs:
       run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
     - name: run cargo-dinghy
       run: |
-          xcrun simctl boot $(xcrun simctl create My-iphone7 com.apple.CoreSimulator.SimDeviceType.iPhone-7 $(xcrun simctl list runtimes | grep iOS | cut -d ' ' -f 7 | tail -1))
-          cargo dinghy --platform auto-ios-x86_64 test
+          make test
     - name: Build
       run: cargo build --verbose --target x86_64-apple-ios
     - name: Run cargo-bundle
-      run: RUST_LOG=debug cargo bundle --example rect --format ios --target x86_64-apple-ios && xcrun simctl install booted target/x86_64-apple-ios/debug/examples/bundle/ios/rect.app && xcrun simctl launch booted com.github.simlay.uikit-sys.rect
+      run: |
+        make bundle-run

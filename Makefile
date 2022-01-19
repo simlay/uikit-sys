@@ -10,7 +10,7 @@ TARGET=x86_64-apple-ios
 boot-sim:
 	xcrun simctl boot $(DEVICE_ID) || true
 
-tests: boot-sim
+test: boot-sim
 	cargo dinghy --platform auto-ios-x86_64 test
 
 bundle:
