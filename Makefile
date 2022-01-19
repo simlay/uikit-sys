@@ -2,11 +2,13 @@
 
 RUNTIME_ID=$(shell xcrun simctl list runtimes | grep iOS | cut -d ' ' -f 7 | tail -1)
 
-DEVICE_ID=$(shell xcrun simctl list devices 'iOS 15.2' | grep -v '^--' | grep -v '==' | head -n 1 | awk '{print $$3}' | sed 's/[()]//g')
+DEVICE_ID=$(shell xcrun simctl list devices 'iOS' | grep -v '^--' | grep -v '==' | head -n 1 | awk '{print $$3}' | sed 's/[()]//g')
 
 TARGET=x86_64-apple-ios
 
 boot-sim:
+	@echo DEVICE ID: $(DEVICE_ID)
+	xcrun simctl list devices
 	xcrun simctl list devices booted | grep iPhone || xcrun simctl boot $(DEVICE_ID)
 
 test: boot-sim
