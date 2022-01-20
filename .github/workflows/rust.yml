@@ -5,7 +5,9 @@ on: [push, pull_request]
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        ci-action: [bundle, dinghy]
     runs-on: macOS-latest
     steps:
     - uses: actions/cache@v2
@@ -32,19 +34,23 @@ jobs:
 
     - uses: actions/checkout@v1
     - uses: actions-rs/install@v0.1
+      if: ${{ matrix.check == 'dinghy' }}
       with:
         crate: cargo-dinghy
         version: latest
 
-    - name: install cargo-bundle
-      run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
     - name: run cargo-dinghy
-      run: |
-          make test
+      if: ${{ matrix.check == 'dinghy' }}
+      run: make test
+
+    - name: install cargo-bundle
+      if: ${{ matrix.check == 'bundle' }}
+      run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
 
     - name: Build
+      if: ${{ matrix.check == 'bundle' }}
       run: cargo build --verbose --target x86_64-apple-ios
 
     - name: Run cargo-bundle
-      run: |
-        make bundle-run
+      if: ${{ matrix.check == 'bundle' }}
+      run: make bundle-run
