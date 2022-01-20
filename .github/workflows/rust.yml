@@ -1,30 +1,49 @@
 name: Rust
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
 
     runs-on: macOS-latest
     steps:
+	- uses: actions/cache@v2
+	  with:
+		path: |
+		  ~/.cargo/bin/
+		  ~/.cargo/registry/index/
+		  ~/.cargo/registry/cache/
+		  ~/.cargo/git/db/
+		  target/
+		key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
     - name: Install stable rust toolchain
       uses: actions-rs/toolchain@v1
       with:
         profile: default
         toolchain: stable
         target: x86_64-apple-ios
+
     - name: install clang
       run: brew install llvm
+
     - uses: actions/checkout@v1
-    - name: install cargo-dinghy
-      run: cargo install cargo-dinghy
+	- uses: actions-rs/install@v0.1
+	  with:
+		crate: cargo-dingy
+		version: latest
+
     - name: install cargo-bundle
       run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
     - name: run cargo-dinghy
       run: |
           make test
+
     - name: Build
       run: cargo build --verbose --target x86_64-apple-ios
+
     - name: Run cargo-bundle
       run: |
         make bundle-run
