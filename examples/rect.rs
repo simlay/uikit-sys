@@ -1,17 +1,18 @@
-#[macro_use] extern crate objc;
+#[macro_use]
+extern crate objc;
 
+use log::trace;
+use objc::{
+    declare::ClassDecl,
+    runtime::{Class, Object, Sel},
+};
+use winit::event_loop::EventLoopProxy;
 use winit::{
     event::{Event, StartCause, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     platform::ios::{EventLoopExtIOS, WindowBuilderExtIOS, WindowExtIOS},
     window::{Window, WindowBuilder},
 };
-use objc::{
-    declare::ClassDecl,
-    runtime::{Class, Object, Sel},
-};
-use log::trace;
-use winit::event_loop::EventLoopProxy;
 
 use objc::msg_send;
 use uikit_sys::CFGetRetainCount;
@@ -60,50 +61,50 @@ pub fn main() -> ! {
     let mut label = add_counte_label(count);
     event_loop.run(
         move |event: winit::event::Event<WidgetEvent>, _, control_flow| {
-        *control_flow = ControlFlow::Wait;
+            *control_flow = ControlFlow::Wait;
 
-        match event {
-            Event::NewEvents(StartCause::Init) => {
-                let root_view: UIView = UIView(window.ui_view() as id);
-                let views = get_views();
-                for i in &views {
+            match event {
+                Event::NewEvents(StartCause::Init) => {
+                    let root_view: UIView = UIView(window.ui_view() as id);
+                    let views = get_views();
+                    for i in &views {
+                        unsafe {
+                            root_view.addSubview_(i.clone());
+                        }
+                    }
                     unsafe {
-                        root_view.addSubview_(i.clone());
+                        root_view.addSubview_(label.clone());
                     }
                 }
-                unsafe {
-                    root_view.addSubview_(label.clone());
-                }
-            }
-            Event::LoopDestroyed => return,
-            Event::RedrawRequested(_) => {}
-            Event::WindowEvent { ref event, .. } => match event {
-                WindowEvent::Resized(_logical_size) => {
-                    //window.request_redraw();
-                }
-                WindowEvent::Touch(winit::event::Touch { phase, .. }) => {
-                    if phase == &winit::event::TouchPhase::Started {
-                        println!("Removing old label");
-                        //for i in 1..100 {
-                        unsafe {
-                            label.removeFromSuperview();
-                        }
-                        count = count + 1;
-                        label = add_counte_label(count);
-                        unsafe {
-                            root_view.addSubview_(label.clone());
-                        }
+                Event::LoopDestroyed => return,
+                Event::RedrawRequested(_) => {}
+                Event::WindowEvent { ref event, .. } => match event {
+                    WindowEvent::Resized(_logical_size) => {
+                        //window.request_redraw();
                     }
-                    //}
-                }
-                WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
-                _ => (),
-            },
-            Event::UserEvent(widget_event) => {
+                    WindowEvent::Touch(winit::event::Touch { phase, .. }) => {
+                        if phase == &winit::event::TouchPhase::Started {
+                            println!("Removing old label");
+                            //for i in 1..100 {
+                            unsafe {
+                                label.removeFromSuperview();
+                            }
+                            count = count + 1;
+                            label = add_counte_label(count);
+                            unsafe {
+                                root_view.addSubview_(label.clone());
+                            }
+                        }
+                        //}
+                    }
+                    WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
+                    _ => (),
+                },
+                Event::UserEvent(widget_event) => {}
+                _ => {}
             }
-            _ => {}
-        }
-    })
+        },
+    )
 }
 
 #[derive(PartialEq, Clone, Debug)]
@@ -182,7 +183,8 @@ impl EventHandler {
     }
 }
 
-fn get_views() -> Vec<UIView> {//{{{
+fn get_views() -> Vec<UIView> {
+    //{{{
     let mut views = Vec::new();
     let rect = CGRect {
         origin: CGPoint { x: 10.0, y: 20.0 },
@@ -230,9 +232,10 @@ fn get_views() -> Vec<UIView> {//{{{
     };
     views.push(UIView(switch.0));
     views
-}//}}}
+} //}}}
 
-fn add_counte_label(count: i64) -> UIView {//{{{
+fn add_counte_label(count: i64) -> UIView {
+    //{{{
     use uikit_sys::{
         CGPoint, CGRect, CGSize, INSObject, IUILabel, NSString, NSString_NSStringExtensionMethods,
         NSUTF8StringEncoding, UILabel, UIView_UIViewGeometry, UIView_UIViewHierarchy,
@@ -270,7 +273,7 @@ fn add_counte_label(count: i64) -> UIView {//{{{
     };
     //label
     UIView(label.0)
-}//}}}
+} //}}}
 
 fn debug_init() {
     color_backtrace::install_with_settings(
