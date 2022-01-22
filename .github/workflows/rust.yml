@@ -51,10 +51,6 @@ jobs:
       if: ${{ matrix.ci-action == 'bundle' }}
       run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
 
-    - name: Build
-      if: ${{ matrix.ci-action == 'bundle' }}
-      run: cargo build --verbose --target x86_64-apple-ios
-
     - name: Run cargo-bundle
       if: ${{ matrix.ci-action == 'bundle' }}
       run: make bundle-run
