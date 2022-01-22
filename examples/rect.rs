@@ -53,7 +53,6 @@ pub fn main() -> ! {
 
     let root_view: UIView = UIView(window.ui_view() as id);
     unsafe {
-        //let background = UIColor::alloc().initWithRed_green_blue_alpha_(0.1, 1.0, 2.0, 2.0);
         let background = UIColor::redColor();
         root_view.setBackgroundColor_(background);
     }
@@ -66,7 +65,12 @@ pub fn main() -> ! {
         match event {
             Event::NewEvents(StartCause::Init) => {
                 let root_view: UIView = UIView(window.ui_view() as id);
-                //add_views(&root_view);
+                let views = get_views();
+                for i in &views {
+                    unsafe {
+                        root_view.addSubview_(i.clone());
+                    }
+                }
                 unsafe {
                     root_view.addSubview_(label.clone());
                 }
@@ -178,7 +182,8 @@ impl EventHandler {
     }
 }
 
-fn add_views(root_view: &UIView) {//{{{
+fn get_views() -> Vec<UIView> {//{{{
+    let mut views = Vec::new();
     let rect = CGRect {
         origin: CGPoint { x: 10.0, y: 20.0 },
         size: CGSize {
@@ -192,9 +197,7 @@ fn add_views(root_view: &UIView) {//{{{
         foo.setBackgroundColor_(background);
         foo
     };
-    unsafe {
-        root_view.addSubview_(rect);
-    }
+    views.push(rect);
     let input_rect = CGRect {
         origin: CGPoint { x: 10.0, y: 50.0 },
         size: CGSize {
@@ -204,7 +207,7 @@ fn add_views(root_view: &UIView) {//{{{
     };
     let input = unsafe {
         let text_container = NSTextContainer(NSTextContainer::alloc().initWithSize_(CGSize {
-            height: 10.0,
+            height: 100.0,
             width: 200.0,
         }));
         let foo = UITextView(
@@ -212,11 +215,9 @@ fn add_views(root_view: &UIView) {//{{{
         );
         foo
     };
-    unsafe {
-        root_view.addSubview_(UIView(input.0));
-    }
-    unsafe {
-        let switch = UISwitch(uikit_sys::IUISwitch::initWithFrame_(
+    views.push(UIView(input.0));
+    let switch = unsafe {
+        UISwitch(uikit_sys::IUISwitch::initWithFrame_(
             &UISwitch::alloc(),
             CGRect {
                 origin: CGPoint { x: 10.0, y: 80.0 },
@@ -225,9 +226,10 @@ fn add_views(root_view: &UIView) {//{{{
                     width: 200.0,
                 },
             },
-        ));
-        root_view.addSubview_(UIView(switch.0));
-    }
+        ))
+    };
+    views.push(UIView(switch.0));
+    views
 }//}}}
 
 fn add_counte_label(count: i64) -> UIView {//{{{

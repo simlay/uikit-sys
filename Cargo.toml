@@ -29,7 +29,7 @@ cargo-bundle's support for bundling crate examples.
 
 
 [build-dependencies]
-bindgen = { version = "0.59.2", default-features = false, features = ["runtime"]}
+bindgen = { version = "0.59.2", default-features = false}
 
 [target.'cfg(target_os = "ios")'.dependencies]
 objc = "0.2.7"

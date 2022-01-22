@@ -60,8 +60,8 @@ fn build(sdk_path: Option<&str>, target: &str) {
     builder = builder
         .clang_args(&clang_args)
         .objc_extern_crate(true)
-        .block_extern_crate(true)
-        .generate_block(true)
+        //.block_extern_crate(true)
+        //.generate_block(true)
         .rustfmt_bindings(true)
         // time.h as has a variable called timezone that conflicts with some of the objective-c
         // calls from NSCalendar.h in the Foundation framework. This removes that one variable.
