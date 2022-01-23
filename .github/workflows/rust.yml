@@ -21,6 +21,8 @@ jobs:
           ~/.cargo/registry/index/
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
+          ~/.cargo/.crates.toml
+          ~/.cargo/.crates2.json
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
@@ -36,20 +38,21 @@ jobs:
       with:
         version: "13.0"
 
-    - uses: actions/checkout@v2.4.0
     - uses: actions-rs/install@v0.1
       if: ${{ matrix.ci-action == 'dinghy' }}
       with:
         crate: cargo-dinghy
         version: latest
-
-    - name: run cargo-dinghy
-      if: ${{ matrix.ci-action == 'dinghy' }}
-      run: make test
+        use-tool-cache: true
 
     - name: install cargo-bundle
       if: ${{ matrix.ci-action == 'bundle' }}
       run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
+
+    - uses: actions/checkout@v2.4.0
+    - name: run cargo-dinghy
+      if: ${{ matrix.ci-action == 'dinghy' }}
+      run: make test
 
     - name: Run cargo-bundle
       if: ${{ matrix.ci-action == 'bundle' }}
