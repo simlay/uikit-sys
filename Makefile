@@ -17,7 +17,7 @@ test: boot-sim
 bundle:
 	cargo bundle --example rect --format ios --target $(TARGET)
 
-bundle-install: bundle
+bundle-install: bundle boot-sim
 	xcrun simctl install booted target/$(TARGET)/debug/examples/bundle/ios/rect.app
 
 bundle-run: bundle-install

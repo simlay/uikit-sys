@@ -1,11 +1,17 @@
 name: Rust
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        ci-action: [bundle, dinghy]
     runs-on: macOS-latest
     steps:
     - uses: actions/cache@v2
@@ -25,24 +31,26 @@ jobs:
         toolchain: stable
         target: x86_64-apple-ios
 
-    - name: install clang
-      run: brew install llvm
+    - name: Install LLVM and Clang
+      uses: KyleMayes/install-llvm-action@v1.5.0
+      with:
+        version: "13.0"
 
     - uses: actions/checkout@v1
     - uses: actions-rs/install@v0.1
+      if: ${{ matrix.ci-action == 'dinghy' }}
       with:
         crate: cargo-dinghy
         version: latest
 
-    - name: install cargo-bundle
-      run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
     - name: run cargo-dinghy
-      run: |
-          make test
+      if: ${{ matrix.ci-action == 'dinghy' }}
+      run: make test
 
-    - name: Build
-      run: cargo build --verbose --target x86_64-apple-ios
+    - name: install cargo-bundle
+      if: ${{ matrix.ci-action == 'bundle' }}
+      run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
 
     - name: Run cargo-bundle
-      run: |
-        make bundle-run
+      if: ${{ matrix.ci-action == 'bundle' }}
+      run: make bundle-run

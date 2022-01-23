@@ -60,16 +60,16 @@ fn build(sdk_path: Option<&str>, target: &str) {
     builder = builder
         .clang_args(&clang_args)
         .objc_extern_crate(true)
-        .block_extern_crate(true)
-        .generate_block(true)
+        //.block_extern_crate(true)
+        //.generate_block(true)
         .rustfmt_bindings(true)
         // time.h as has a variable called timezone that conflicts with some of the objective-c
         // calls from NSCalendar.h in the Foundation framework. This removes that one variable.
-        .blacklist_item("timezone")
+        .blocklist_item("timezone")
         // https://github.com/rust-lang/rust-bindgen/issues/1705
-        .blacklist_item("IUIStepper")
-        .blacklist_function("dividerImageForLeftSegmentState_rightSegmentState_")
-        .blacklist_item("objc_object")
+        .blocklist_item("IUIStepper")
+        .blocklist_function("dividerImageForLeftSegmentState_rightSegmentState_")
+        .blocklist_item("objc_object")
         .header_contents("UIKit.h", "#include<UIKit/UIKit.h>");
 
     // Generate the bindings.
