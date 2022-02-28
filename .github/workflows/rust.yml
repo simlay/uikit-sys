@@ -34,7 +34,7 @@ jobs:
         target: x86_64-apple-ios
 
     - name: Install LLVM and Clang
-      uses: KyleMayes/install-llvm-action@v1.5.0
+      uses: KyleMayes/install-llvm-action@v1.5.1
       with:
         version: "13.0"
 
