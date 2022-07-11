@@ -70,6 +70,14 @@ fn main() -> Result<(), std::io::Error> {
         .blocklist_item("IUIStepper")
         .blocklist_function("dividerImageForLeftSegmentState_rightSegmentState_")
         .blocklist_item("objc_object")
+		// FndrOpaqueInfo is blocked due to this error when the target has -macabi: 
+		// type has conflicting packed and align representation hints 
+        .blocklist_item("FndrOpaqueInfo")
+		// The following are blocked because they depend on FndrOpaqueInfo above
+        .blocklist_item("HFSCatalogFolder")
+        .blocklist_item("HFSPlusCatalogFolder")
+        .blocklist_item("HFSCatalogFile")
+        .blocklist_item("HFSPlusCatalogFile")
         .header_contents("UIKit.h", "#include<UIKit/UIKit.h>");
 
     // Generate the bindings.
