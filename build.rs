@@ -60,6 +60,7 @@ fn build(sdk_path: Option<&str>, target: &str) {
     builder = builder
         .clang_args(&clang_args)
         .objc_extern_crate(true)
+        .layout_tests(false)
         //.block_extern_crate(true)
         //.generate_block(true)
         .rustfmt_bindings(true)
