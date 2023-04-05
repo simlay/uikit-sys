@@ -1,34 +1,25 @@
 use std::env;
 use std::path::PathBuf;
 
-fn sdk_path(target: &str) -> Result<String, std::io::Error> {
+fn main() -> Result<(), std::io::Error> {
+    let target = std::env::var("TARGET").unwrap();
+    if !target.contains("apple-ios") {
+        panic!("uikit-sys requires the ios target");
+    }
     use std::process::Command;
-    let sdk = if vec![
-        "x86_64-apple-ios",
-        "i386-apple-ios",
-        "aarch64-apple-ios-sim",
-    ]
-    .contains(&target)
-    {
-        "iphonesimulator"
-    } else if target == "aarch64-apple-ios"
-        || target == "armv7-apple-ios"
-        || target == "armv7s-apple-ios"
-    {
-        "iphoneos"
-    } else {
-        unreachable!();
-    };
-
+	let sdk = match target.as_str() {
+        "x86_64-apple-ios" | "i386-apple-ios" | "aarch64-apple-ios-sim" => "iphonesimulator",
+		"aarch64-apple-ios" | "armv7-apple-ios" | "armv7s-apple-ios" => "iphoneos",
+		"x86_64-apple-ios-macabi" | "aarch64-apple-ios-macabi" => "macosx",
+		_ => unreachable!()
+	};
     let output = Command::new("xcrun")
         .args(&["--sdk", sdk, "--show-sdk-path"])
         .output()?
         .stdout;
     let prefix_str = std::str::from_utf8(&output).expect("invalid output from `xcrun`");
-    Ok(prefix_str.trim_end().to_string())
-}
-
-fn build(sdk_path: Option<&str>, target: &str) {
+	let sys_root = prefix_str.trim_end().to_string();
+	
     // Generate one large set of bindings for all frameworks.
     //
     // We do this rather than generating a module per framework as some frameworks depend on other
@@ -43,19 +34,28 @@ fn build(sdk_path: Option<&str>, target: &str) {
     // See https://github.com/rust-lang/rust-bindgen/issues/1211
     // Technically according to the llvm mailing list, the argument to clang here should be
     // -arch arm64 but it looks cleaner to just change the target.
-    let target = if target == "aarch64-apple-ios" {
-        "arm64-apple-ios"
-    } else {
-        target
-    };
+	let target = match target.as_str() {
+		"aarch64-apple-ios"  => "aarch64-apple-ios",
+		_ => &target
+	};
     // Begin building the bindgen params.
     let mut builder = bindgen::Builder::default();
 
     let target_arg = format!("--target={}", target);
+	// Set clang's -isysroot dir for all targets.
+	// Set -isystem and -iframework For Mac catalyst only per https://stackoverflow.com/a/59939450
+	let isystem = format!("{}/System/iOSSupport/usr/include",  &sys_root);
+	let iframework = format!("{}/System/iOSSupport/System/Library/Frameworks",  &sys_root);
     let mut clang_args = vec!["-x", "objective-c", "-fblocks", &target_arg];
-    if let Some(sdk_path) = sdk_path {
-        clang_args.extend(&["-isysroot", sdk_path]);
-    }
+	clang_args.extend(&["-isysroot", &sys_root]);
+
+	match target {
+		"x86_64-apple-ios-macabi" | "aarch64-apple-ios-macabi" => {
+			clang_args.extend(&["-isystem", isystem.as_str()]);
+			clang_args.extend(&["-iframework", iframework.as_str()]);
+		},
+		_ => ()
+	};
 
     builder = builder
         .clang_args(&clang_args)
@@ -71,6 +71,14 @@ fn build(sdk_path: Option<&str>, target: &str) {
         .blocklist_item("IUIStepper")
         .blocklist_function("dividerImageForLeftSegmentState_rightSegmentState_")
         .blocklist_item("objc_object")
+		// FndrOpaqueInfo is blocked due to this error when the target has -macabi: 
+		// type has conflicting packed and align representation hints 
+        .blocklist_item("FndrOpaqueInfo")
+		// The following are blocked because they depend on FndrOpaqueInfo above
+        .blocklist_item("HFSCatalogFolder")
+        .blocklist_item("HFSPlusCatalogFolder")
+        .blocklist_item("HFSCatalogFile")
+        .blocklist_item("HFSPlusCatalogFile")
         .header_contents("UIKit.h", "#include<UIKit/UIKit.h>");
 
     // Generate the bindings.
@@ -83,14 +91,6 @@ fn build(sdk_path: Option<&str>, target: &str) {
     bindings
         .write_to_file(out_dir.join("uikit.rs"))
         .expect("could not write bindings");
-}
 
-fn main() {
-    let target = std::env::var("TARGET").unwrap();
-    if !target.contains("apple-ios") {
-        panic!("uikit-sys requires the ios target");
-    }
-
-    let directory = sdk_path(&target).ok();
-    build(directory.as_ref().map(String::as_ref), &target);
+	Ok(())
 }
