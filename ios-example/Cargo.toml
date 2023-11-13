@@ -15,6 +15,6 @@ objc_id = "0.1.1"
 winit = "0.20.0"
 color-backtrace = "0.2.3"
 log = "0.4"
-pretty_env_logger = "0.3"
+pretty_env_logger = "0.5"
 env_logger = "0.9"
 uikit-sys = { path = "../" }
