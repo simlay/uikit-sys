@@ -49,7 +49,7 @@ jobs:
       if: ${{ matrix.ci-action == 'bundle' }}
       run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: run cargo-dinghy
       if: ${{ matrix.ci-action == 'dinghy' }}
       run: make test
