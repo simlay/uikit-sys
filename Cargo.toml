@@ -40,7 +40,7 @@ winit = "0.26.0"
 log = "0.4"
 pretty_env_logger = "0.4"
 color-backtrace = "0.5.1"
-env_logger = "0.9"
+env_logger = "0.11"
 
 [patch.crates-io]
 winit = { git = "https://github.com/rust-windowing/winit" }
